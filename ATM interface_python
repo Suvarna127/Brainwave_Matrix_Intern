@@ -1,0 +1,88 @@
+# ATM Interface in Python
+
+import getpass
+
+#sample user data
+users = {
+    '1234': {
+        'pin': '0000',
+        'balance': 5000.0,
+        'name': 'Kanchana K'
+    }
+   '5678':{
+        'pin': '9999',
+        'balance': 10000.0,
+        'name': 'Arundhathi A'
+    }
+}
+
+def authenticate(account_number):
+    if account_number in users:
+        pin = getpass.getpass("Enter your 4-digit PIN: ")
+        if pin == users[account_number]['pin']:
+            print(f"\nWelcome, {users[account_number]['name']}!\n")
+            return True
+        else:
+            print("❌ Incorrect PIN.\n")
+            return False
+    else:
+        print("❌ Account not found.\n")
+        return False
+
+def check_balance(account_number):
+    print(f"\nYour current balance is: ₹{users[account_number]['balance']:.2f}\n")
+
+def withdraw(account_number):
+    try:
+        amount = float(input("Enter amount to withdraw: ₹"))
+        if amount <= 0:
+            print("❌ Invalid amount.\n")
+        elif amount > users[account_number]['balance']:
+            print("❌ Insufficient balance.\n")
+        else:
+            users[account_number]['balance'] -= amount
+            print(f"✅ ₹{amount:.2f} withdrawn successfully.")
+            check_balance(account_number)
+    except ValueError:
+        print("❌ Please enter a valid number.\n")
+
+def deposit(account_number):
+    try:
+        amount = float(input("Enter amount to deposit: ₹"))
+        if amount <= 0:
+            print("❌ Invalid amount.\n")
+        else:
+            users[account_number]['balance'] += amount
+            print(f"✅ ₹{amount:.2f} deposited successfully.")
+            check_balance(account_number)
+    except ValueError:
+        print("❌ Please enter a valid number.\n")
+
+def atm_interface():
+    print("🏧 Welcome to the Python ATM\n")
+    account_number = input("Enter your 4-digit account number: ")
+
+    if authenticate(account_number):
+        while True:
+            print("Select an option:")
+            print("1. Check Balance")
+            print("2. Withdraw")
+            print("3. Deposit")
+            print("4. Exit")
+
+            choice = input("Enter your choice (1-4): ")
+
+            if choice == '1':
+                check_balance(account_number)
+            elif choice == '2':
+                withdraw(account_number)
+            elif choice == '3':
+                deposit(account_number)
+            elif choice == '4':
+                print("Thank you for using the ATM. Goodbye!\n")
+                break
+            else:
+                print("❌ Invalid option. Please try again.\n")
+
+# Run the ATM
+atm_interface()
